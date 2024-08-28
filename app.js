@@ -64,7 +64,7 @@ app.post('/auth', (req, res) => {
 
 
 app.get('/auth_code', (req, res) => {
-  res.render('auth_code');
+  res.render("auth_code");
 })
 
 app.post('/auth_code', (req, res) => {
