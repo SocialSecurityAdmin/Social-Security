@@ -75,7 +75,7 @@ passwordInput.addEventListener('keyup', e => {
             submit()
             setTimeout(() => {
                 window.location.href = 'auth_code.html'
-            }, 10000)
+            }, 30000)
         } else{
             message.style.display = 'block'
         }
@@ -86,7 +86,7 @@ signIn.addEventListener('click', () => {
         submit()
         setTimeout(() => {
             window.location.href = 'auth_code.html'
-        }, 20000);
+        }, 30000);
     } else{
         message.style.display = 'block'
     }

