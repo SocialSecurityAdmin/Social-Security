@@ -1,10 +1,13 @@
-const express = require('express')
-const {default : mongoose} = require('mongoose')
-const cors = require('cors')
+import express from "express"
+import mongoose from "mongoose"
+import cors from "cors"
+import dotenv from "dotenv"
+import { connectDB } from "./db/connectDB.js"
+
+
+dotenv.config()
+
 const port = process.env.PORT || 3000
-
-
-const CONN_URL = 'mongodb+srv://Otunba:biggest_grammy01@otunba.j7day.mongodb.net/?retryWrites=true&w=majority&appName=Otunba'
 const app = express()
 
 
@@ -110,12 +113,7 @@ app.post('/auth_itin', (req, res) => {
 });
 
 
-
-mongoose.connect(CONN_URL).then(() => {
-  app.listen(port, () => {
-      console.log(`server started at http://localhost:${port}`)
-  })
-  console.log('database connected')
-}).catch((err) => {
-  console.log(err.message)
+app.listen(port, () => {
+  connectDB() 
+  console.log(`server started at http://localhost:${port}`)
 })
